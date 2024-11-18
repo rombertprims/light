@@ -92,11 +92,7 @@ void addHaloPipe(Hyperion *hyp)
             {.column = 4, .slot = 8, .pattern = new ExamplePatterns::WaterDrop2()},
             {.column = 4, .slot = 9, .pattern = new ExamplePatterns::SubSectionStrobe()},
             {.column = 4, .slot = 10, .pattern = new ExamplePatterns::MeesterPlusser()},
-
-            
-
-            
-
+            {.column = 4, .slot = 11, .pattern = new ExamplePatterns::WipWap()},
 
 
             {.column = 5, .slot = 0, .pattern = new ExamplePatterns::ParamsPattern()},
@@ -111,8 +107,15 @@ void addHaloPipe(Hyperion *hyp)
             
 
             {.column = 6, .slot = 0, .pattern = new ExamplePatterns::MappedPattern(&haloMap)},
-            {.column = 6, .slot = 1, .pattern = new ExamplePatterns::MappedPattern1(&haloMap)},
-            {.column = 6, .slot = 2, .pattern = new ExamplePatterns::MappedPattern2(&haloMap)}, 
+            {.column = 6, .slot = 1, .pattern = new ExamplePatterns::SlidingBeams(&haloMap)},
+            {.column = 6, .slot = 2, .pattern = new ExamplePatterns::BeamsRotate(&haloMap)}, 
+            {.column = 6, .slot = 3, .pattern = new ExamplePatterns::MappedRotate(&haloMap)}, 
+            {.column = 6, .slot = 4, .pattern = new ExamplePatterns::BeamsRotate1(&haloMap)}, 
+
+            
+
+
+            
 
             {.column = 7, .slot = 0, .pattern = new ExamplePatterns::TransitionPattern()},
             {.column = 7, .slot = 1, .pattern = new ExamplePatterns::SpatialTransitionPattern()},

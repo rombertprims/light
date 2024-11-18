@@ -7,6 +7,7 @@
 #include <math.h>
 #include <vector>
 #include "sectionDivider.hpp"
+#include <cstdlib>
 
 namespace ExamplePatterns
 {
@@ -17,37 +18,21 @@ namespace ExamplePatterns
 
     class HelloWorld : public Pattern<RGBA>
     {
-        // This example will paint all leds red. It will show you the minimal code you need in a pattern
 
     public:
         HelloWorld()
         {
-            // The name is displayed in the controller
             this->name = "Hello world";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
         {
-            // ControlHubInput will run this Calculate method on patterns it knows about.
-            // If the active parameter is false, this pattern should not be displayed.
-            // That is why we immediately return here. In some examples below you will see
-            // how we can use this to create fade-outs or wait for an animation to finish
-            // before stopping the rendering. (eg FadeFinishPattern))
+
             if (!active)
                 return;
 
-            // loop trough all leds and make them red.
             for (int i = 0; i < width; i++)
                 pixels[i] = RGBA(255, 0, 0, 255);
-
-            // std::vector<Section> sections = sectionDivider.GetSections();
-
-            // for (auto section : sections) {
-            //     for (int i = section.firstLed; i <= section.lastLed; i++)
-            //         pixels[i] = RGBA(255, 0, 0, 255);
-
-            // }
-
         }
     };
 
@@ -230,19 +215,19 @@ namespace ExamplePatterns
             // int startLed=0;
             // for (int i = 0; i < 4; i++)
             // {
-            //     for (int j = startLed; j < startLed+sectionDivider.GetLedsPerRing(i); j++)
+            //     for (int j = startLed; j < startLed+sectionDivider.getLedsPerRing(i); j++)
             //     {
-            //         float phase = float(j-startLed) / sectionDivider.GetLedsPerRing(i);
+            //         float phase = float(j-startLed) / sectionDivider.getLedsPerRing(i);
             //         pixels[j] = params->getPrimaryColour() * lfo.getValue(phase);
             //     }
-            //     startLed=startLed+sectionDivider.GetLedsPerRing(i);
+            //     startLed=startLed+sectionDivider.getLedsPerRing(i);
             // }
 
             for (int i = 0; i < 4; i++)
             {
-                for (int j = sectionDivider.GetSquare(i).FirstLed; j <= sectionDivider.GetSquare(i).LastLed; j++)
+                for (int j = sectionDivider.getSquare(i).FirstLed; j <= sectionDivider.getSquare(i).LastLed; j++)
                 {
-                    float phase=float(j-sectionDivider.GetSquare(i).FirstLed)/sectionDivider.GetLedsPerRing(i);
+                    float phase=float(j-sectionDivider.getSquare(i).FirstLed)/sectionDivider.getLedsPerRing(i);
                     pixels[j]=params->getPrimaryColour()*lfo.getValue(phase);
                 }
             }
@@ -274,10 +259,9 @@ namespace ExamplePatterns
             lfo.setDutyCycle(0.25);
             lfo2.setDutyCycle(0.25);
 
-            if (Tempo::TimeBetweenBeats()>100){
-                lfo.setPeriod(4*Tempo::TimeBetweenBeats());
-                lfo2.setPeriod(2*Tempo::TimeBetweenBeats());
-            }
+            
+            lfo.setPeriod(4*Tempo::TimeBetweenBeats());
+            lfo2.setPeriod(2*Tempo::TimeBetweenBeats());
         
             if (watcher.Triggered()){
                 permute.permute();
@@ -288,9 +272,9 @@ namespace ExamplePatterns
                 
                 int square=i;
 
-                for (int j = sectionDivider.GetSquare(square).FirstLed; j <= sectionDivider.GetSquare(square).LastLed; j++)
+                for (int j = sectionDivider.getSquare(square).FirstLed; j <= sectionDivider.getSquare(square).LastLed; j++)
                 {
-                    float phase=float(j-sectionDivider.GetSquare(square).FirstLed)*4/sectionDivider.GetLedsPerRing(square);
+                    float phase=float(j-sectionDivider.getSquare(square).FirstLed)*4/sectionDivider.getLedsPerRing(square);
                     pixels[j]=params->getPrimaryColour()*lfo.getValue(phase+0.1)+params->getSecondaryColour()*lfo.getValue(-phase*1.2);
                     if (i==2){
                         pixels[j]=params->getPrimaryColour()*lfo2.getValue(phase+0.1)+params->getSecondaryColour()*lfo2.getValue(-phase*1.2);
@@ -302,9 +286,9 @@ namespace ExamplePatterns
             // {
             //     int square=permute.at[i];
 
-            //     for (int j = sectionDivider.GetSquare(square).FirstLed; j <= sectionDivider.GetSquare(square).LastLed; j++)
+            //     for (int j = sectionDivider.getSquare(square).FirstLed; j <= sectionDivider.getSquare(square).LastLed; j++)
             //     {
-            //         float phase=float(j-sectionDivider.GetSquare(square).FirstLed)*4/sectionDivider.GetLedsPerRing(square);
+            //         float phase=float(j-sectionDivider.getSquare(square).FirstLed)*4/sectionDivider.getLedsPerRing(square);
             //         pixels[j]=params->getPrimaryColour()*lfo.getValue(-phase);
             //     }
             // }    
@@ -403,7 +387,7 @@ namespace ExamplePatterns
                 iteratie=(iteratie+1)%4;
             
             for (int i=0;i<4;i++){
-                for (int j=sectionDivider.GetSquare(i).FirstLed; j<=sectionDivider.GetSquare(i).LastLed;j++)
+                for (int j=sectionDivider.getSquare(i).FirstLed; j<=sectionDivider.getSquare(i).LastLed;j++)
                 {
                     pixels[j]=colors[(iteratie+i)%4];
                 }
@@ -531,9 +515,7 @@ namespace ExamplePatterns
     class Custom1 : public Pattern<RGBA>
     {
     public:
-        // You can use permute to create patterns that apply to only some of the lights.
-        // Permute will create a list of numbers in random order.
-        // eg Permute with a size of 5 could give you [3,4,1,0,2]
+    
         BeatWatcher watcher;
         int ringselector=0;
         SectionDivider sectionDivider;
@@ -577,7 +559,7 @@ namespace ExamplePatterns
             if (fade.isFinished(velocity))
                 return;
 
-            for (int i=sectionDivider.GetSquare(ringselector).FirstLed; i<=sectionDivider.GetSquare(ringselector).LastLed;i++)
+            for (int i=sectionDivider.getSquare(ringselector).FirstLed; i<=sectionDivider.getSquare(ringselector).LastLed;i++)
                 {
                     pixels[i]=params->getPrimaryColour() * fade.getValue(velocity);
                 }
@@ -587,12 +569,9 @@ namespace ExamplePatterns
     class Custom2 : public Pattern<RGBA>
     {
     public:
-        // You can use permute to create patterns that apply to only some of the lights.
-        // Permute will create a list of numbers in random order.
-        // eg Permute with a size of 5 could give you [3,4,1,0,2]
         BeatWatcher watcher;
         SectionDivider sectionDivider;
-        int sideselector=0;
+        int sideselector;
         FadeDown fade;
 
 
@@ -614,7 +593,7 @@ namespace ExamplePatterns
                 fade.reset();
             }
 
-            for (auto & element : sectionDivider.GetSides(sideselector)) {
+            for (auto & element : sectionDivider.getSides(sideselector)) {
                 for (int i = element.FirstLed;i<=element.LastLed;i++){
                     pixels[i]=params->getSecondaryColour()*fade.getValue();
                 }
@@ -641,7 +620,7 @@ namespace ExamplePatterns
                 return;
 
             //Set size to amount of sections
-            permute.setSize(sectionDivider.GetSections().size());
+            permute.setSize(sectionDivider.getSections().size());
 
             if (watcher.Triggered())
             {
@@ -653,11 +632,11 @@ namespace ExamplePatterns
             for (int j=0; j< params->getAmount(1,5); j++) {
                 int randomizedSectionIndex = permute.at[j];
                 if (permute.at[j + 1] % 2 == 0){
-                    for (int i = sectionDivider.GetSections().at(randomizedSectionIndex).FirstLed; i<=sectionDivider.GetSections().at(randomizedSectionIndex).LastLed;i++){
+                    for (int i = sectionDivider.getSections().at(randomizedSectionIndex).FirstLed; i<=sectionDivider.getSections().at(randomizedSectionIndex).LastLed;i++){
                         pixels[i]=params->getPrimaryColour()* fade.getValue();
                     }
                 } else{
-                    for (int i = sectionDivider.GetSections().at(randomizedSectionIndex).FirstLed; i<=sectionDivider.GetSections().at(randomizedSectionIndex).LastLed;i++){
+                    for (int i = sectionDivider.getSections().at(randomizedSectionIndex).FirstLed; i<=sectionDivider.getSections().at(randomizedSectionIndex).LastLed;i++){
                         pixels[i]=params->getSecondaryColour()* fade.getValue();
                     }
                 }
@@ -691,9 +670,9 @@ namespace ExamplePatterns
 
             // We need to tell permute how many leds we are working with
             for (int i=0; i<4; i++){
-                for (int j=sectionDivider.GetSquare(i).FirstLed; j<=sectionDivider.GetSquare(i).LastLed;j++)
+                for (int j=sectionDivider.getSquare(i).FirstLed; j<=sectionDivider.getSquare(i).LastLed;j++)
                 {
-                    float phase = Utils::rescale(j, i*0.25, (i+1)*0.25, sectionDivider.GetSquare(i).FirstLed, sectionDivider.GetSquare(i).LastLed);
+                    float phase = Utils::rescale(j, i*0.25, (i+1)*0.25, sectionDivider.getSquare(i).FirstLed, sectionDivider.getSquare(i).LastLed);
 
                     pixels[j]=params->getPrimaryColour()*lfo.getValue(phase);
                 }
@@ -722,7 +701,7 @@ namespace ExamplePatterns
             if (!active)
                 return;
             int number_of_sub_sections=params->getAmount(1,10);
-            std::vector<Section> sub_sections=sectionDivider.GetSubSections(number_of_sub_sections);
+            std::vector<Section> sub_sections=sectionDivider.getSubSections(number_of_sub_sections);
             if (watcher.Triggered()){
                 sectionIndex++;
             }
@@ -766,8 +745,8 @@ namespace ExamplePatterns
                     sectionIndex=0;
                 }
             }
-            Section permutedSection = sectionDivider.GetSections().at(permute.at[sectionIndex]);
-            Section phasedPermutedSection = sectionDivider.GetPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection);
+            Section permutedSection = sectionDivider.getSections().at(permute.at[sectionIndex]);
+            Section phasedPermutedSection = sectionDivider.getPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection);
             for (int i = phasedPermutedSection.FirstLed; i <= phasedPermutedSection.LastLed; i++)
             {
                 pixels[i]=params->getPrimaryColour();
@@ -783,6 +762,7 @@ namespace ExamplePatterns
         Permute permute;
         BeatWatcher watcher;
         int sectionIndex=0;
+        int indices[8]={0,1,4,5,8,9,12,13};
 
         WaterDrop1()
         {
@@ -793,23 +773,24 @@ namespace ExamplePatterns
             if (!active){
                 return;
             }
-            permute.setSize(16);
+            permute.setSize(8);
             if (watcher.Triggered()){
                 sectionIndex++;
-                if (sectionIndex>=16){
+                if (sectionIndex>=8){
                     permute.permute();
                     sectionIndex=0;
                 }
             }
-            Section permutedSection = sectionDivider.GetSections().at(permute.at[sectionIndex]);
-            Section phasedPermutedSection = sectionDivider.GetPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection);
+            int currentIndex=indices[permute.at[sectionIndex]];
+            Section permutedSection = sectionDivider.getSections().at(currentIndex); //permute.at[sectionIndex]);
+            Section phasedPermutedSection = sectionDivider.getPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection);
             for (int i = phasedPermutedSection.FirstLed; i <= phasedPermutedSection.LastLed; i++)
             {
                 pixels[i]=params->getPrimaryColour();
             }
 
-            Section permutedSection1 = sectionDivider.GetSections().at(sectionDivider.GetOppositeSectionIndex(permute.at[sectionIndex]));
-            Section phasedPermutedSection1 = sectionDivider.GetPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection1);
+            Section permutedSection1 = sectionDivider.getSections().at(sectionDivider.getOppositeSectionIndex(currentIndex)); //permute.at[sectionIndex]));
+            Section phasedPermutedSection1 = sectionDivider.getPhaseFromMiddle((Tempo::GetProgress(1)+0.1),permutedSection1);
             for (int i = phasedPermutedSection1.FirstLed; i <= phasedPermutedSection1.LastLed; i++)
             {
                 pixels[i]=params->getPrimaryColour();
@@ -852,18 +833,18 @@ namespace ExamplePatterns
             float variant = params->getVariant();
             
             if (variant<=(1./3.)){
-                sections = sectionDivider.GetVectorSquare(sectionIndex);
+                sections = sectionDivider.getVectorSquare(sectionIndex);
             } else if (variant<=(2./3.)){
-                sections = sectionDivider.GetVectorSquare(permute.at[sectionIndex]);
+                sections = sectionDivider.getVectorSquare(permute.at[sectionIndex]);
             } else {
-                sections = sectionDivider.GetVectorSquare(3-sectionIndex);
+                sections = sectionDivider.getVectorSquare(3-sectionIndex);
             }
                 
 
-            //std::vector<Section> sections = sectionDivider.GetVectorSquare(permute.at[sectionIndex]);
+            //std::vector<Section> sections = sectionDivider.getVectorSquare(permute.at[sectionIndex]);
             for (auto section : sections) {
-                //Section permutedSection = sectionDivider.GetVectorSquare().at(permute.at[sectionIndex]);
-                Section phasedPermutedSection = sectionDivider.GetPhaseFromMiddle((Tempo::GetProgress(1)+0.1),section);
+                //Section permutedSection = sectionDivider.getVectorSquare().at(permute.at[sectionIndex]);
+                Section phasedPermutedSection = sectionDivider.getPhaseFromMiddle((Tempo::GetProgress(1)+0.1),section);
                 for (int i = phasedPermutedSection.FirstLed; i <= phasedPermutedSection.LastLed; i++)
                 {
                     pixels[i]=params->getPrimaryColour();
@@ -892,7 +873,7 @@ namespace ExamplePatterns
                 return;
             int number_of_sub_sections=10;
             
-            std::vector<Section> sub_sections=sectionDivider.GetSubSections(number_of_sub_sections);
+            std::vector<Section> sub_sections=sectionDivider.getSubSections(number_of_sub_sections);
             
             timeline.FrameStart();
             perm.setSize(sub_sections.size());
@@ -925,7 +906,7 @@ namespace ExamplePatterns
         SectionDivider sd;
         int horizontal[4]={12,8,4,0};
         int vertical[4]={13,9,5,1};
-        //int current[4]={0,0,0,0};
+        FadeDown fade;
         bool orientation=true;
 
         MeesterPlusser()
@@ -940,9 +921,9 @@ namespace ExamplePatterns
             if (!active)
                 return;
 
-            // if (watcher.Triggered()){
-                
-            // }
+            if (watcher.Triggered()){
+                fade.reset();
+            }
             orientation = (Tempo::GetProgress(8) >=0.5);
             int index = 4*Tempo::GetProgress(4);
             for (int j = 0; j <= index; j++)
@@ -953,21 +934,62 @@ namespace ExamplePatterns
                 } else {
                     sideIndex=vertical[j];
                 }
-                for (int i = sd.GetOppositeSides(sideIndex).at(0).FirstLed; i <= sd.GetOppositeSides(sideIndex).at(0).LastLed; i++)
+                for (int i = sd.getOppositeSides(sideIndex).at(0).FirstLed; i <= sd.getOppositeSides(sideIndex).at(0).LastLed; i++)
                 {
-                    pixels[i]=params->getPrimaryColour();
+                    pixels[i]=params->getPrimaryColour()*fade.getValue();
                 }
-                for (int i = sd.GetOppositeSides(sideIndex).at(1).FirstLed; i <= sd.GetOppositeSides(sideIndex).at(1).LastLed; i++)
+                for (int i = sd.getOppositeSides(sideIndex).at(1).FirstLed; i <= sd.getOppositeSides(sideIndex).at(1).LastLed; i++)
                 {
-                    pixels[i]=params->getPrimaryColour();
+                    pixels[i]=params->getPrimaryColour()*fade.getValue();
                 }
             }
-            
-            
-            
-            
+        }
+    };
 
 
+    class WipWap : public Pattern<RGBA>
+    {
+
+    public:
+
+        LFO<Tri> lfo;
+        SectionDivider sd;
+        WipWap()
+        {
+            this->name = "WipWap";
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+
+            if (!active)
+                return;
+            
+            lfo.setPeriod(2*Tempo::TimeBetweenBeats());
+            Section currentSection;
+            int increase;
+            int startindex;
+
+            
+            if (Tempo::GetProgress(16)<0.5){
+                increase=2;
+                startindex=0;
+            } else {
+                increase=2;
+                startindex=1;
+            }
+
+            for (int sectionIndex = startindex; sectionIndex < 16; sectionIndex+=increase)
+            {
+                currentSection = sd.getSide(sectionIndex);
+                int ledrange=currentSection.LastLed-currentSection.FirstLed+1;
+                int width2 = (ledrange)*params->getSize(0.5,0.05);
+                int litUpStart=currentSection.FirstLed+(ledrange-width2)*lfo.getValue();
+                
+                for (int i = litUpStart; i <= litUpStart+width2; i++){
+                    pixels[i] = RGBA(255, 0, 0, 255);
+                }
+            }   
 
         }
     };
@@ -1222,7 +1244,7 @@ namespace ExamplePatterns
         }
     };
 
-    class MappedPattern1 : public Pattern<RGBA>
+    class MappedWack : public Pattern<RGBA>
     {
     public:
         LFO<SawDown> lfo;
@@ -1232,7 +1254,7 @@ namespace ExamplePatterns
         BeatWatcher watcher;
 
         // For mapped patterns, the constructor needs to receive the map and store it in a property
-        MappedPattern1(PixelMap *map)
+        MappedWack(PixelMap *map)
         {
             this->name = "MapSawDown";
             this->map = map;
@@ -1272,7 +1294,7 @@ namespace ExamplePatterns
                 if (variant<0.5){
                     phase=(map->x(i)+offset*map->y(i))/(1+offset);
                 } else {
-                    phase=map->y(i);
+                    phase=map->y(i)*0.5;
                 }
 
                 // float x_phase = map->x(i);
@@ -1285,18 +1307,153 @@ namespace ExamplePatterns
             }
         }
     };
-
-    class MappedPattern2 : public Pattern<RGBA>
+    
+    
+    class BeamsRotate : public Pattern<RGBA>
     {
     public:
-        LFO<SoftSawDown> lfo;
+        LFO<Tri> lfo;
         PixelMap *map;
 
         // For mapped patterns, the constructor needs to receive the map and store it in a property
-        MappedPattern2(PixelMap *map)
+        BeamsRotate(PixelMap *map)
         {
-            this->name = "SoftMapSawdown";
+            this->name = "BeamsRotate";
             this->map = map;
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!active)
+                return;
+            lfo.setPeriod(16*Tempo::TimeBetweenBeats());
+            //lfo.setDutyCycle(params->getAmount(0.1, 1)); //werkt niet voor Tri
+            //lfo.setSoftEdgeWidth(params->getSize(0,0.4)); //werkt niet voor Tri
+            //float angle=params->getOffset(0,2*M_PI);
+            float bandwidth=0.05+lfo.getValue()*0.4;//params->getSize(0.05,0.7);
+            int phaseBeats=params->getVelocity(1,8);
+            float angle=Tempo::GetProgress(8)*2*M_PI;
+            
+            float phase=Tempo::GetProgress(phaseBeats);
+    
+            // Determine the direction vector for the beam
+            double beam_dx = std::cos(angle);
+            double beam_dy = std::sin(angle);
+
+            // Determine the perpendicular direction (normalized)
+            double perp_dx = -beam_dy;
+            double perp_dy = beam_dx;
+
+            // Calculate the starting point of the beam (at phase 0)
+            double start_x = -1.0 * perp_dx - bandwidth * perp_dx; // Move outward by bandwidth
+            double start_y = -1.0 * perp_dy - bandwidth * perp_dy;
+
+            // Calculate the ending point of the beam (at phase 1)
+            double end_x = 1.0 * perp_dx + bandwidth * perp_dx; // Move outward by bandwidth
+            double end_y = 1.0 * perp_dy + bandwidth * perp_dy;
+
+            // Calculate the current position of the beam's center based on phase
+            double beam_center_x = start_x + (end_x - start_x) * phase; // Interpolate position
+            double beam_center_y = start_y + (end_y - start_y) * phase;
+            
+            for (int i = 0; i < width; i++)
+            {
+                // Calculate the perpendicular distance from the point (x, y) to the beam's current center line
+                // Project (x - beam_center_x, y - beam_center_y) onto the perpendicular vector
+                double projection = std::abs((map->x(i) - beam_center_x) * perp_dx + (map->y(i) - beam_center_y) * perp_dy);
+
+                // Check if the point is within the beam's bandwidth
+                if (projection<=bandwidth){
+                    //pixels[i] = params->getPrimaryColour();
+                    pixels[i] = params->getGradient(phase*255);
+                }
+            }
+        }
+    };
+
+    class SlidingBeams : public Pattern<RGBA>
+    {
+    public:
+        PixelMap *map;
+        BeatWatcher watcher;
+        float angle=0;
+        float old_angle;
+         
+
+        // For mapped patterns, the constructor needs to receive the map and store it in a property
+        SlidingBeams(PixelMap *map)
+        {
+            this->name = "SlidingBeams";
+            this->map = map;
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!active)
+                return;
+
+            if (watcher.Triggered()){
+                old_angle=angle;
+                while (abs(fmod(angle - old_angle + M_PI, 2 * M_PI) - M_PI) < 1){
+                    angle = (std::rand()%360)/360.0*2*M_PI;
+                }
+                
+            }
+
+            float bandwidth=params->getSize(0.03,0.3);
+
+            int phaseBeats=params->getVelocity(1,8);
+            
+            float phase=Tempo::GetProgress(phaseBeats);
+    
+            // Determine the direction vector for the beam
+            double beam_dx = std::cos(angle);
+            double beam_dy = std::sin(angle);
+
+            // Determine the perpendicular direction (normalized)
+            double perp_dx = -beam_dy;
+            double perp_dy = beam_dx;
+
+            // Calculate the starting point of the beam (at phase 0)
+            double start_x = -1.0 * perp_dx - bandwidth * perp_dx; // Move outward by bandwidth
+            double start_y = -1.0 * perp_dy - bandwidth * perp_dy;
+
+            // Calculate the ending point of the beam (at phase 1)
+            double end_x = 1.0 * perp_dx + bandwidth * perp_dx; // Move outward by bandwidth
+            double end_y = 1.0 * perp_dy + bandwidth * perp_dy;
+
+            // Calculate the current position of the beam's center based on phase
+            double beam_center_x = start_x + (end_x - start_x) * phase; // Interpolate position
+            double beam_center_y = start_y + (end_y - start_y) * phase;
+            
+            for (int i = 0; i < width; i++)
+            {
+                // Calculate the perpendicular distance from the point (x, y) to the beam's current center line
+                // Project (x - beam_center_x, y - beam_center_y) onto the perpendicular vector
+                double projection = std::abs((map->x(i) - beam_center_x) * perp_dx + (map->y(i) - beam_center_y) * perp_dy);
+
+                // Check if the point is within the beam's bandwidth
+                if (projection<=bandwidth){
+                    //pixels[i] = params->getPrimaryColour();
+                    pixels[i] = params->getGradient(phase*255);
+                }
+            }
+        }
+    };
+
+    class MappedRotate : public Pattern<RGBA>
+    {
+    public:
+        LFO<SinFast> lfo;
+        PixelMap *map;
+        PixelMap::Polar map1;
+
+        MappedRotate(PixelMap *map)
+        {
+            this->name = "MappedRotate";
+            this->map = map;
+            map1= map->toPolar();
+
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -1307,25 +1464,75 @@ namespace ExamplePatterns
             lfo.setDutyCycle(params->getAmount(0.1, 1));
             lfo.setSoftEdgeWidth(params->getSize(0,0.4));
 
+
             for (int i = 0; i < width; i++)
             {
-                // In your pattern you can access the coordinates with map->x(i) and map->y(i)
-                // You should generate your maps in range [-1,1].
-                // In this example i need a phase in range [0,1], so i need to rescale the value.
-                // For here on you can use it the same way you did before
-                
-                // float phase = Utils::rescale(map->x(i), 0, 1, -1, 1);
-                // pixels[i] = params->getPrimaryColour() * lfo.getValue(phase);
-                
-                //float x_phase = Utils::rescale(map->x(i), 0, 1, -1, 1);
-                //float y_phase = Utils::rescale(map->y(i), 0, 1, -1, 1);
-                float x_phase = map->x(i);
-                float y_phase = map->y(i);
-                // Calculate the distance from the center (0, 0) in both x and y directions.
-                float phase = sqrt(x_phase * x_phase + y_phase * y_phase);
+                float th_phase = map1.th(i);
+                //float y_phase = map->y(i);
+                //float phase = sqrt(x_phase * x_phase + y_phase * y_phase);
 
                 // Use the phase for the LFO value.
-                pixels[i] = params->getPrimaryColour() * lfo.getValue(phase);
+                pixels[i] = params->getPrimaryColour() *Utils::rescale(th_phase,0,1,-M_PI,M_PI);// lfo.getValue(th_phase);// lfo.getValue(r_phase);
+            }
+        }
+    };
+
+    class BeamsRotate1 : public Pattern<RGBA>
+    {
+    public:
+        PixelMap *map;
+
+        // For mapped patterns, the constructor needs to receive the map and store it in a property
+        BeamsRotate1(PixelMap *map)
+        {
+            this->name = "SmallBeamsRotate";
+            this->map = map;
+        }
+
+        inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
+        {
+            if (!active)
+                return;
+            float bandwidth=params->getSize(0.02,0.4);
+            int phaseBeats=params->getAmount(1,16);
+            int angleBeats=params->getVelocity(1,16);
+            float angle=Tempo::GetProgress(angleBeats)*2*M_PI;
+            
+            
+            float phase=Tempo::GetProgress(phaseBeats);
+
+    
+            // Determine the direction vector for the beam
+            double beam_dx = std::cos(angle);
+            double beam_dy = std::sin(angle);
+
+            // Determine the perpendicular direction (normalized)
+            double perp_dx = -beam_dy;
+            double perp_dy = beam_dx;
+
+            // Calculate the starting point of the beam (at phase 0)
+            double start_x = -1.0 * perp_dx - bandwidth * perp_dx; // Move outward by bandwidth
+            double start_y = -1.0 * perp_dy - bandwidth * perp_dy;
+
+            // Calculate the ending point of the beam (at phase 1)
+            double end_x = 1.0 * perp_dx + bandwidth * perp_dx; // Move outward by bandwidth
+            double end_y = 1.0 * perp_dy + bandwidth * perp_dy;
+
+            // Calculate the current position of the beam's center based on phase
+            double beam_center_x = start_x + (end_x - start_x) * phase; // Interpolate position
+            double beam_center_y = start_y + (end_y - start_y) * phase;
+            
+            for (int i = 0; i < width; i++)
+            {
+                // Calculate the perpendicular distance from the point (x, y) to the beam's current center line
+                // Project (x - beam_center_x, y - beam_center_y) onto the perpendicular vector
+                double projection = std::abs((map->x(i) - beam_center_x) * perp_dx + (map->y(i) - beam_center_y) * perp_dy);
+
+                // Check if the point is within the beam's bandwidth
+                if (projection<=bandwidth){
+                    //pixels[i] = params->getPrimaryColour();
+                    pixels[i] = params->getGradient(phase*255);
+                }
             }
         }
     };

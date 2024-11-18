@@ -12,22 +12,23 @@ public:
 
  SectionDivider();
 
-    void AddSection(Section section);  //functies benoenoemen dat ze bestaan zodat het programma weet wat er gebeurd.
-    void AddSectionsSquare(int sideLength); //Voor de init van de sectionDivider
+    void addSection(Section section);  //functies benoenoemen dat ze bestaan zodat het programma weet wat er gebeurd.
+    void addSectionsSquare(int sideLength); //Voor de init van de sectionDivider
 
-    int GetOppositeSectionIndex(int sectionIndex);
+    int getOppositeSectionIndex(int sectionIndex);
 
-    Section GetSquare(int squareIndex);                 //si=0 buitenste ring, si=3 binneste ring
-    Section GetSide(int squareIndex, int sideIndex);    //return 1 section
-    Section GetPhaseFromMiddle(double phase, Section section);  //Return gedeelte van section
-    int GetLedsPerRing(int squareIndex);
+    Section getSquare(int squareIndex);                 //si=0 buitenste ring, si=3 binneste ring
+    Section getSide(int sectionIndex);
+    Section getSide(int squareIndex, int sideIndex);    //return 1 section
+    Section getPhaseFromMiddle(double phase, Section section);  //Return gedeelte van section
+    int getLedsPerRing(int squareIndex);
 
-    std::vector<Section> GetSectionsPhaseFromMiddle(double phase, std::vector<Section> sections);
-    std::vector<Section> GetSections();                 //Return alle zijdes
-    std::vector<Section> GetVectorSquare(int squareIndex);   //Return square in de vorm van 4 vectors
-    std::vector<Section> GetSides(int sideIndex);           //Return l/r/boven/onder van alle squares.
-    std::vector<Section> GetOppositeSides(int sectionIndex);
-    std::vector<Section> GetSubSections(int numberSubSections);
+    std::vector<Section> getSectionsPhaseFromMiddle(double phase, std::vector<Section> sections);
+    std::vector<Section> getSections();                 //Return alle zijdes
+    std::vector<Section> getVectorSquare(int squareIndex);   //Return square in de vorm van 4 vectors
+    std::vector<Section> getSides(int sideIndex);           //Return l/r/boven/onder van alle squares.
+    std::vector<Section> getOppositeSides(int sectionIndex);
+    std::vector<Section> getSubSections(int numberSubSections);
 
 
     
@@ -42,32 +43,32 @@ private:
 //Constructor
 SectionDivider::SectionDivider() //init van de class--> hiermee wordt object dus aangemaakt.
 {
-    AddSectionsSquare(40);
-    AddSectionsSquare(30);
-    AddSectionsSquare(25);
-    AddSectionsSquare(20);
+    addSectionsSquare(40);
+    addSectionsSquare(30);
+    addSectionsSquare(25);
+    addSectionsSquare(20);
 }
 
-void SectionDivider::AddSection(Section section) { // section wordt toegevoegd. Als method moeten we dan dus een section meegeven.
+void SectionDivider::addSection(Section section) { // section wordt toegevoegd. Als method moeten we dan dus een section meegeven.
     mSections.emplace_back(section);
 }
 
-void SectionDivider::AddSectionsSquare(int sideLength) {
+void SectionDivider::addSectionsSquare(int sideLength) {
     for (int i = 0; i < 4; i++)
     {
         if (mSections.empty()) {
-            AddSection(Section{0,sideLength-1});
+            addSection(Section{0,sideLength-1});
         } else {
-        AddSection(Section{(mSections.back().LastLed+1), (mSections.back().LastLed+sideLength)});
+        addSection(Section{(mSections.back().LastLed+1), (mSections.back().LastLed+sideLength)});
         }
     }
 }
 
-std::vector<Section> SectionDivider::GetSections() {
+std::vector<Section> SectionDivider::getSections() {
     return mSections;
 }
 
-Section SectionDivider::GetSquare(int i) {
+Section SectionDivider::getSquare(int i) {
 
     // Calculate the index range for the square
     int firstSectionSquare = i * 4;          
@@ -81,15 +82,19 @@ Section SectionDivider::GetSquare(int i) {
     return Section{sectionFirstLed, sectionLastLed};
 }
 
-Section SectionDivider::GetSide(int squareIndex, int sideIndex){
-    // return de boven/onder/links/rechts, van een van een specifieke square
-    if (mSections.size()<(squareIndex*4+sideIndex))
+Section SectionDivider::getSide(int sectionIndex){
+    if (mSections.size()<sectionIndex){
         return Section{0,0};
-
-    return mSections[squareIndex*4+sideIndex];
+    }
+    return mSections[sectionIndex];
 }
 
-std::vector<Section> SectionDivider::GetVectorSquare(int squareIndex){
+Section SectionDivider::getSide(int squareIndex, int sideIndex){
+    // return de boven/onder/links/rechts, van een van een specifieke square
+    return SectionDivider::getSide(squareIndex*4+sideIndex);
+}
+
+std::vector<Section> SectionDivider::getVectorSquare(int squareIndex){
     // return de zijkanten van een square als vector met 4 sections.
     std::vector<Section> returnSections;
     for (size_t i = 0; i < 4; i++)
@@ -100,7 +105,7 @@ std::vector<Section> SectionDivider::GetVectorSquare(int squareIndex){
     
 }
 
-std::vector<Section> SectionDivider::GetSides(int sideIndex){
+std::vector<Section> SectionDivider::getSides(int sideIndex){
     //Return een vector van alle specifieke zijkanten
     std::vector<Section> returnSections;
     for (int i=0; i<4; i++){ //4 gehardcode om er voor het gemak vanuit te gaan dat we 4 squares hebben. Voor het gemak gehardcode
@@ -109,7 +114,7 @@ std::vector<Section> SectionDivider::GetSides(int sideIndex){
     return returnSections;
 }
 
-Section SectionDivider::GetPhaseFromMiddle(double phase, Section section){
+Section SectionDivider::getPhaseFromMiddle(double phase, Section section){
     int middleLed=(section.FirstLed+section.LastLed)/2;
     if (phase>=1) phase=1;
     int firstLedPhased = Utils::rescale(phase, middleLed, section.FirstLed, 0, 1);
@@ -118,36 +123,36 @@ Section SectionDivider::GetPhaseFromMiddle(double phase, Section section){
 
 }
 
-std::vector<Section> SectionDivider::GetSectionsPhaseFromMiddle(double phase, std::vector<Section> sections){
+std::vector<Section> SectionDivider::getSectionsPhaseFromMiddle(double phase, std::vector<Section> sections){
     std::vector<Section> returnSections;
     for (auto section : sections)
     {
-        returnSections.emplace_back(SectionDivider::GetPhaseFromMiddle(phase, section));
+        returnSections.emplace_back(SectionDivider::getPhaseFromMiddle(phase, section));
     }
     return returnSections;
 }
 
-std::vector<Section> SectionDivider::GetOppositeSides(int sectionIndex){
+std::vector<Section> SectionDivider::getOppositeSides(int sectionIndex){
     std::vector<Section> returnSections;
     int sideIndex=sectionIndex%4;
     int ringIndex=(sectionIndex-sideIndex)/4;
-    returnSections.emplace_back(SectionDivider::GetSide(ringIndex, sideIndex));
-    returnSections.emplace_back(SectionDivider::GetSide(ringIndex, (sideIndex+2)%4));
+    returnSections.emplace_back(SectionDivider::getSide(ringIndex, sideIndex));
+    returnSections.emplace_back(SectionDivider::getSide(ringIndex, (sideIndex+2)%4));
     return returnSections;
 }
 
-int SectionDivider::GetOppositeSectionIndex(int sectionIndex){
+int SectionDivider::getOppositeSectionIndex(int sectionIndex){
     int sideIndex=sectionIndex%4;
     int ringIndex=(sectionIndex-sideIndex)/4;
     int oppositeIndex=(sideIndex+2)%4;
     return (ringIndex*4)+oppositeIndex;
 }
 
-int SectionDivider::GetLedsPerRing(int squareIndex){
+int SectionDivider::getLedsPerRing(int squareIndex){
     return ledsPerSquare[squareIndex];
 }
 
-std::vector<Section> SectionDivider::GetSubSections(int numberSubSections) {
+std::vector<Section> SectionDivider::getSubSections(int numberSubSections) {
     std::vector<Section> result;
 
     for (const Section& section : mSections) {
