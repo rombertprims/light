@@ -64,40 +64,40 @@ void addHaloPipe(Hyperion *hyp)
         haloMap.size(), //The number of leds it is going to ask the patterns to generate color data for. 
         &hyp->hub, //The control hub to connect to
         {
-            {.column = 1, .slot = 0, .pattern = new ExamplePatterns::HelloWorld()},
-            {.column = 1, .slot = 1, .pattern = new ExamplePatterns::Palette()},
-            {.column = 1, .slot = 2, .pattern = new ExamplePatterns::PaletteGradient()},
-            {.column = 1, .slot = 3, .pattern = new ExamplePatterns::Blending()},
-            {.column = 1, .slot = 4, .pattern = new ExamplePatterns::PatternLayering()},
+            // {.column = 1, .slot = 0, .pattern = new ExamplePatterns::HelloWorld()},
+            // {.column = 1, .slot = 1, .pattern = new ExamplePatterns::Palette()},
+            // {.column = 1, .slot = 2, .pattern = new ExamplePatterns::PaletteGradient()},
+            // {.column = 1, .slot = 3, .pattern = new ExamplePatterns::Blending()},
+            // {.column = 1, .slot = 4, .pattern = new ExamplePatterns::PatternLayering()},
 
-            {.column = 2, .slot = 0, .pattern = new ExamplePatterns::LFOPattern()},
-            {.column = 2, .slot = 1, .pattern = new ExamplePatterns::LFOChase()},
-            {.column = 2, .slot = 4, .pattern = new ExamplePatterns::LFOChaseMasked()},
+            //{.column = 2, .slot = 1, .pattern = new ExamplePatterns::LFOPattern()},
+            {.column = 2, .slot = 0, .pattern = new ExamplePatterns::LFOChase()},
+            {.column = 2, .slot = 1, .pattern = new ExamplePatterns::LFOChaseMasked()},
             
-            {.column = 2, .slot = 2, .pattern = new ExamplePatterns::LFOChaseGradient()},
-            {.column = 2, .slot = 3, .pattern = new ExamplePatterns::LFOAntiAlias()},
+            // {.column = 2, .slot = 2, .pattern = new ExamplePatterns::LFOChaseGradient()},
+            // {.column = 2, .slot = 3, .pattern = new ExamplePatterns::LFOAntiAlias()},
 
-            {.column = 3, .slot = 0, .pattern = new ExamplePatterns::FadePattern()},
-            {.column = 3, .slot = 1, .pattern = new ExamplePatterns::FadeChasePattern()},
-            {.column = 3, .slot = 2, .pattern = new ExamplePatterns::FadeFinishPattern()},
+            //{.column = 3, .slot = 0, .pattern = new ExamplePatterns::FadePattern()},
+            //{.column = 3, .slot = 0, .pattern = new ExamplePatterns::FadeChasePattern()},
+            {.column = 3, .slot = 0, .pattern = new ExamplePatterns::FadeFinishPattern()},
 
             {.column = 4, .slot = 0, .pattern = new ExamplePatterns::PermutePattern()},
-            {.column = 4, .slot = 1, .pattern = new ExamplePatterns::Custom1()},
-            {.column = 4, .slot = 2, .pattern = new ExamplePatterns::Custom2()},
-            {.column = 4, .slot = 3, .pattern = new ExamplePatterns::Custom3()},
-            {.column = 4, .slot = 4, .pattern = new ExamplePatterns::Custom4()},
-            {.column = 4, .slot = 5, .pattern = new ExamplePatterns::Custom5()},
+            {.column = 4, .slot = 1, .pattern = new ExamplePatterns::RingBeat()},
+            {.column = 4, .slot = 2, .pattern = new ExamplePatterns::OneSide()},
+            {.column = 4, .slot = 3, .pattern = new ExamplePatterns::Random3Sides()},
+            {.column = 4, .slot = 4, .pattern = new ExamplePatterns::Slang()},
+            {.column = 4, .slot = 5, .pattern = new ExamplePatterns::SubSections()},
             {.column = 4, .slot = 6, .pattern = new ExamplePatterns::WaterDrop()},
-            {.column = 4, .slot = 7, .pattern = new ExamplePatterns::WaterDrop1()},
-            {.column = 4, .slot = 8, .pattern = new ExamplePatterns::WaterDrop2()},
+            {.column = 4, .slot = 7, .pattern = new ExamplePatterns::WaterDrop2()},
+            {.column = 4, .slot = 8, .pattern = new ExamplePatterns::WaterDrop4()},
             {.column = 4, .slot = 9, .pattern = new ExamplePatterns::SubSectionStrobe()},
-            {.column = 4, .slot = 10, .pattern = new ExamplePatterns::MeesterPlusser()},
+            {.column = 4, .slot = 10, .pattern = new ExamplePatterns::HourGlass()},
             {.column = 4, .slot = 11, .pattern = new ExamplePatterns::WipWap()},
 
 
-            {.column = 5, .slot = 0, .pattern = new ExamplePatterns::ParamsPattern()},
+            //{.column = 5, .slot = 0, .pattern = new ExamplePatterns::ParamsPattern()},
             {.column = 5, .slot = 1, .pattern = new ExamplePatterns::LFOGlow()},
-            {.column = 5, .slot = 2, .pattern = new ExamplePatterns::FadeChase()},
+            //{.column = 5, .slot = 2, .pattern = new ExamplePatterns::FadeChase()},
             {.column = 5, .slot = 3, .pattern = new ExamplePatterns::StrobeHighlightPattern()},
             {.column = 5, .slot = 4, .pattern = new ExamplePatterns::PixelGlitchPattern()},
             {.column = 5, .slot = 5, .pattern = new ExamplePatterns::DoubleFlash()},
@@ -110,7 +110,7 @@ void addHaloPipe(Hyperion *hyp)
             {.column = 6, .slot = 1, .pattern = new ExamplePatterns::SlidingBeams(&haloMap)},
             {.column = 6, .slot = 2, .pattern = new ExamplePatterns::BeamsRotate(&haloMap)}, 
             {.column = 6, .slot = 3, .pattern = new ExamplePatterns::MappedRotate(&haloMap)}, 
-            {.column = 6, .slot = 4, .pattern = new ExamplePatterns::BeamsRotate1(&haloMap)}, 
+            {.column = 6, .slot = 4, .pattern = new ExamplePatterns::SmallBeamsRotate(&haloMap)}, 
 
             
 

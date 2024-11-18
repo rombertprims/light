@@ -512,7 +512,7 @@ namespace ExamplePatterns
         }
     };
 
-    class Custom1 : public Pattern<RGBA>
+    class RingBeat : public Pattern<RGBA>
     {
     public:
     
@@ -521,9 +521,9 @@ namespace ExamplePatterns
         SectionDivider sectionDivider;
         FadeDown fade;
 
-        Custom1()
+        RingBeat()
         {
-            this->name = "Custom1";
+            this->name = "RingBeat";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -566,7 +566,7 @@ namespace ExamplePatterns
         }
     };
 
-    class Custom2 : public Pattern<RGBA>
+    class OneSide : public Pattern<RGBA>
     {
     public:
         BeatWatcher watcher;
@@ -575,9 +575,9 @@ namespace ExamplePatterns
         FadeDown fade;
 
 
-        Custom2()
+        OneSide()
         {
-            this->name = "Custom2";
+            this->name = "OneSide";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -601,7 +601,7 @@ namespace ExamplePatterns
         }
     };
 
-    class Custom3 : public Pattern<RGBA>
+    class Random3Sides : public Pattern<RGBA>
     {
     public:
         BeatWatcher watcher;
@@ -609,9 +609,9 @@ namespace ExamplePatterns
         Permute permute;
         FadeDown fade;
 
-        Custom3()
+        Random3Sides()
         {
-            this->name = "Custom3";
+            this->name = "Random 3 Sides";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -644,7 +644,7 @@ namespace ExamplePatterns
         }
     };
 
-    class Custom4 : public Pattern<RGBA>
+    class Slang : public Pattern<RGBA>
     {
     public:
         BeatWatcher watcher;
@@ -653,9 +653,9 @@ namespace ExamplePatterns
         LFO<SinFast> sinf;
         
 
-        Custom4()
+        Slang()
         {
-            this->name = "Custom4";
+            this->name = "Slang";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -683,7 +683,7 @@ namespace ExamplePatterns
         }
     };
 
-    class Custom5 : public Pattern<RGBA>
+    class SubSections : public Pattern<RGBA>
     {
     public:
         SectionDivider sectionDivider;
@@ -691,9 +691,9 @@ namespace ExamplePatterns
         int sectionIndex=0;
     
 
-        Custom5()
+        SubSections()
         {
-            this->name = "Custom5";
+            this->name = "Sub-Sections";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -730,7 +730,7 @@ namespace ExamplePatterns
 
         WaterDrop()
         {
-            this->name="WaterDrop";
+            this->name="1 WaterDrop";
         }
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
         {
@@ -755,7 +755,7 @@ namespace ExamplePatterns
         }
     };
 
-    class WaterDrop1 : public Pattern<RGBA>
+    class WaterDrop2 : public Pattern<RGBA>
     {
     public:
         SectionDivider sectionDivider;
@@ -764,9 +764,9 @@ namespace ExamplePatterns
         int sectionIndex=0;
         int indices[8]={0,1,4,5,8,9,12,13};
 
-        WaterDrop1()
+        WaterDrop2()
         {
-            this->name="WaterDrop1";
+            this->name="2 WaterDrop";
         }
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
         {
@@ -799,7 +799,7 @@ namespace ExamplePatterns
         }
     };
 
-    class WaterDrop2 : public Pattern<RGBA>
+    class WaterDrop4 : public Pattern<RGBA>
     {
     public:
         SectionDivider sectionDivider;
@@ -809,9 +809,9 @@ namespace ExamplePatterns
         int last_ring;
         std::vector<Section> sections;
 
-        WaterDrop2()
+        WaterDrop4()
         {
-            this->name="WaterDrop2";
+            this->name="4 WaterDrop";
         }
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
         {
@@ -864,7 +864,7 @@ namespace ExamplePatterns
 
         SubSectionStrobe()
         {
-            this->name = "SubSectionStrobe";
+            this->name = "Sub Section Strobe";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -896,7 +896,7 @@ namespace ExamplePatterns
         }
     };
    
-   class MeesterPlusser : public Pattern<RGBA>
+   class HourGlass : public Pattern<RGBA>
     {
         // This example will paint all leds red. It will show you the minimal code you need in a pattern
 
@@ -909,10 +909,10 @@ namespace ExamplePatterns
         FadeDown fade;
         bool orientation=true;
 
-        MeesterPlusser()
+        HourGlass()
         {
             // The name is displayed in the controller
-            this->name = "MeesterPlusser";
+            this->name = "HourGlass";
         }
 
         inline void Calculate(RGBA *pixels, int width, bool active, Params *params) override
@@ -983,7 +983,7 @@ namespace ExamplePatterns
             {
                 currentSection = sd.getSide(sectionIndex);
                 int ledrange=currentSection.LastLed-currentSection.FirstLed+1;
-                int width2 = (ledrange)*params->getSize(0.5,0.05);
+                int width2 = (ledrange)*params->getSize(0.05,0.05);
                 int litUpStart=currentSection.FirstLed+(ledrange-width2)*lfo.getValue();
                 
                 for (int i = litUpStart; i <= litUpStart+width2; i++){
@@ -1177,11 +1177,11 @@ namespace ExamplePatterns
 
             timeline.FrameStart();
 
-            int beatDiv = params->getAmount(0,4);
-            if (beatDiv >3) beatDiv =3;
-            int divs[] = {8,4,2,1};
+            // int beatDiv = params->getAmount(0,4);
+            // if (beatDiv >3) beatDiv =3;
+            // int divs[] = {8,4,2,1};
 
-            if (watcher.Triggered() && Tempo::GetBeatNumber() % divs[beatDiv] == 0)
+            if (watcher.Triggered() && Tempo::GetBeatNumber() % 4 ==0) //divs[beatDiv] == 0)  niet met slider maar gewoon elke bar
                 timeline.reset();
 
             if (!timeline.Happened(0) && !timeline.Happened(100))
@@ -1477,15 +1477,16 @@ namespace ExamplePatterns
         }
     };
 
-    class BeamsRotate1 : public Pattern<RGBA>
+    class SmallBeamsRotate : public Pattern<RGBA>
     {
     public:
         PixelMap *map;
+        LFO<SawUp> lfo;
 
         // For mapped patterns, the constructor needs to receive the map and store it in a property
-        BeamsRotate1(PixelMap *map)
+        SmallBeamsRotate(PixelMap *map)
         {
-            this->name = "SmallBeamsRotate";
+            this->name = "Small Beams Rotate";
             this->map = map;
         }
 
@@ -1493,11 +1494,18 @@ namespace ExamplePatterns
         {
             if (!active)
                 return;
-            float bandwidth=params->getSize(0.02,0.4);
-            int phaseBeats=params->getAmount(1,16);
-            int angleBeats=params->getVelocity(1,16);
-            float angle=Tempo::GetProgress(angleBeats)*2*M_PI;
-            
+
+            int beatDiv = params->getAmount(0,4);
+            if (beatDiv >3) beatDiv =3;
+            int divs[] = {8,4,2,1};
+
+            lfo.setPeriod(params->getVelocity(10000, 1500));
+
+            float bandwidth=params->getSize(0.02,0.3);
+            int phaseBeats=divs[beatDiv];//params->getAmount(2,8);
+            int angleBeats=params->getVelocity(3,10);
+            float angle=lfo.getValue()*2*M_PI;
+
             
             float phase=Tempo::GetProgress(phaseBeats);
 
@@ -1511,8 +1519,8 @@ namespace ExamplePatterns
             double perp_dy = beam_dx;
 
             // Calculate the starting point of the beam (at phase 0)
-            double start_x = -1.0 * perp_dx - bandwidth * perp_dx; // Move outward by bandwidth
-            double start_y = -1.0 * perp_dy - bandwidth * perp_dy;
+            double start_x = -1.0 * perp_dx - bandwidth/.7 * perp_dx; // Move outward by bandwidth
+            double start_y = -1.0 * perp_dy - bandwidth/.7 * perp_dy;
 
             // Calculate the ending point of the beam (at phase 1)
             double end_x = 1.0 * perp_dx + bandwidth * perp_dx; // Move outward by bandwidth
